@@ -1,0 +1,13 @@
+option name = "vsg-hw";
+option app_label = "vsg-hw";
+
+message VSGHWService (Service){
+    option verbose_name = "vSG HW Service";
+    option description="HW VSG implementation";
+}
+
+
+message VSGHWServiceInstance (ServiceInstance){
+    option verbose_name = "vSGHW Service Instance";
+    option owner_class_name="VSGHWService";
+}
