@@ -13,15 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This Dockerfile is DEPRECATED and will be removed imminently.
-
 # docker build -t xosproject/vsg-hw-synchronizer:candidate -f Dockerfile.synchronizer .
 
 
 # xosproject/vsg-synchronizer
 FROM xosproject/xos-synchronizer-base:candidate
 
-COPY . /opt/xos/synchronizers/vsg-hw
+COPY xos/synchronizer /opt/xos/synchronizers/vsg-hw
+COPY VERSION /opt/xos/synchronizers/vsg-hw/
 
 ENTRYPOINT []
 
