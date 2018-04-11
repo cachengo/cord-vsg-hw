@@ -31,21 +31,12 @@ class VSGHWServiceInstancePolicy(Policy):
 
     def handle_update(self, service_instance):
         log.info("Handle_update VSG-HW Service Instance", service_instance=service_instance)
-        if (service_instance.link_deleted_count>0) and (not service_instance.provided_links.exists()):
-            # if the last provided_link has just gone away, then self-destruct
-            self.logger.info("The last provided link has been deleted -- self-destructing.")
-            # TODO: We shouldn't have to call handle_delete ourselves. The model policy framework should handle this
-            #       for us, but it isn't. I think that's happening is that serviceinstance.delete() isn't setting a new
-            #       updated timestamp, since there's no way to pass `always_update_timestamp`, and therefore the
-            #       policy framework doesn't know that the object has changed and needs new policies. For now, the
-            #       workaround is to just call handle_delete ourselves.
+
+        if (service_instance.link_deleted_count > 0) and (not service_instance.provided_links.exists()):
+            # If this instance has no links pointing to it, delete
             self.handle_delete(service_instance)
-            # Note that if we deleted the Instance in handle_delete, then django may have cascade-deleted the service
-            # instance by now. Thus we have to guard our delete, to check that the service instance still exists.
             if VSGHWServiceInstance.objects.filter(id=service_instance.id).exists():
                 service_instance.delete()
-            else:
-                self.logger.info("Tenant %s is already deleted" % service_instance)
             return
 
     def handle_delete(self, service_instance):
